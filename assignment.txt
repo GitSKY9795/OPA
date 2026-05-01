@@ -1,0 +1,33 @@
+Online Learning Platform Security
+You are building a backend for an Online Learning Platform.
+Implement secure access control and deployment checks using Open Policy Agent and GitHub Actions.
+
+Part 1: API Authorization (OPA + Express)
+Create:
+POST /course-access
+Implement auth.rego rules:
+Instructor
+Can create, update, delete their own courses
+Student
+Can view enrolled courses only
+Guest
+Can only view free courses
+No one can delete a course if it is published
+
+Part 2: Test Cases
+Student accessing non-enrolled course →  Denied
+Instructor editing own course → Allowed
+Instructor editing others’ course →  Denied
+Guest accessing paid course →  Denied
+Any role deleting published course → Denied
+
+Part 3: CI/CD Policy
+Create policy.rego:
+Deny if:
+course_price < 0
+isPublished = true AND content_missing = true
+env != "prod"
+
+Part 4: CI/CD Pipeline
+Using GitHub Actions:
+Trigger on push to main

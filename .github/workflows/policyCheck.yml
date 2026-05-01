@@ -1,0 +1,22 @@
+name: OPA Policy Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  policy-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Conftest
+        uses: open-policy-agent/setup-conftest@v1
+        with:
+          conftest-version: 0.58.0
+
+      - name: Run OPA Policy Check
+        run: conftest test config.json --policy policy/
