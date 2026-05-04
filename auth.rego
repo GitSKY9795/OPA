@@ -1,26 +1,37 @@
 package auth
 
-allow if{
-    input.user.role == "admin"
+default allow := false
+
+# Instructors can create, update, and delete their own courses.
+allow if {
+    input.user.role == "instructor"
+    input.course.owner_id == input.user.id
+    input.action == "create"
 }
 
-# Manager → read/write reports
-allow if{
-    input.user.role == "manager"
-    input.resource == "reports"
-    input.action == "read"
+allow if {
+    input.user.role == "instructor"
+    input.course.owner_id == input.user.id
+    input.action == "update"
 }
 
-allow if{
-    input.user.role == "manager"
-    input.resource == "reports"
-    input.action == "write"
+allow if {
+    input.user.role == "instructor"
+    input.course.owner_id == input.user.id
+    input.action == "delete"
+    not input.course.published
 }
 
-# User → read their own profile
-allow if{
-    input.user.role == "user"
-    input.resource == "profile"
-    input.action == "read"
-    input.user.id == input.resource_owner_id
+# Students can only view enrolled courses.
+allow if {
+    input.user.role == "student"
+    input.action == "view"
+    input.course.enrolled == true
+}
+
+# Guests can only view free courses.
+allow if {
+    input.user.role == "guest"
+    input.action == "view"
+    input.course.price == 0
 }

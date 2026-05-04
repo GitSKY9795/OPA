@@ -1,12 +1,19 @@
 package main
 
-# Deny if public access is enabled
+# Deny if the course price is invalid.
 deny contains msg if {
-    input.public == true
-    msg = "Public access is not allowed"
+    input.course_price < 0
+    msg = "course_price must be zero or greater"
 }
 
-# Deny if environment is not production-safe
+# Deny if published content is missing.
+deny contains msg if {
+    input.isPublished == true
+    input.content_missing == true
+    msg = "Published content cannot be missing"
+}
+
+# Deny if environment is not production.
 deny contains msg if {
     input.env != "prod"
     msg = "Deployment from dev environment is not allowed"

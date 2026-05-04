@@ -1,5 +1,7 @@
 {
   "name": "my-service",
-  "public": false,
+  "course_price": 100,
+  "isPublished": false,
+  "content_missing": false,
   "env": "prod"
 }
